@@ -23,7 +23,8 @@ return{
   workspaces = {
     {
       name = "notebook",
-      path = "/Volumes/Users/manny/Library/Mobile Documents/iCloud~md~obsidian/Documents/notebook",
+      path = "/home/holze/OneDrive/notebook",
+      -- path = "/Volumes/Users/manny/Library/Mobile Documents/iCloud~md~obsidian/Documents/notebook",
     },
   },
   ui = {
@@ -44,7 +45,8 @@ return{
     nvim_cmp = true, -- Set to false to disable completion.
     min_chars = 1,      -- Trigger completion at <number> chars.
   },
-  new_notes_location = "/Volumes/Users/manny/Library/Mobile Documents/iCloud~md~obsidian/Documents/notebook/0-inbox",
+  new_notes_location = "/home/holze/OneDrive/notebook/0-inbox",
+  -- new_notes_location = "/Volumes/Users/manny/Library/Mobile Documents/iCloud~md~obsidian/Documents/notebook/0-inbox",
   open_app_foreground = false, -- true for executing Obsidian app in the foreground.
   picker = {
     name = "telescope.nvim", -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
