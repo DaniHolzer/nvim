@@ -7,6 +7,7 @@ return{
     "williamboman/mason.nvim",
     dependencies = {
         "williamboman/mason-lspconfig.nvim",
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
     config = function()
         -- import mason
@@ -14,6 +15,8 @@ return{
 
         -- import mason-lspconfig
         local mason_lspconfig = require("mason-lspconfig")
+
+        local mason_tool_installer = require("mason-tool-installer")
 
         -- enable mason and configure icons
         mason.setup({
@@ -95,22 +98,16 @@ return{
 -------------------------------------------------------------------------------
 -- Formatters
 
--- Import Mason Tool Installer plugin safely:
--- local mason_tool_installer_status_ok, mason_tool_installer = pcall(require, 'mason-tool-installer')
--- if not mason_tool_installer_status_ok then
---   return "Error: */lua/user/plugin_options/lspconfig.lua -> Mason-LSP-Config plugin could not be loaded. Sure you have installed it in your plugins file?"
--- end
-
--- mason_tool_installer.setup({
---   ensure_installed = {
---     "prettier", -- prettier formatter
---     "stylua", -- lua formatter
---     "isort", -- python formatter
---     "black", -- python formatter
+mason_tool_installer.setup({
+  ensure_installed = {
+    "prettier", -- prettier formatter
+    "stylua", -- lua formatter
+    "isort", -- python formatter
+    "black", -- python formatter
 --     "pylint",
 --     "eslint_d",
---   },
--- })
+  },
+})
 
 end,
 }
