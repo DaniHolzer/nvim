@@ -7,15 +7,15 @@ return{
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
       "antosha417/nvim-lsp-file-operations",
       "folke/neodev.nvim",
     },
     config = function()
     -- import lspconfig plugin
-    local lspconfig = require("lspconfig")
+    local lspconfig = vim.lsp.config
 
     -- import mason_lspconfig plugin
     local mason_lspconfig = require("mason-lspconfig")
@@ -78,12 +78,16 @@ end
 mason_lspconfig.setup_handlers({
   -- Default handler for installed servers:
   function(server_name)
-    lspconfig[server_name].setup({
-      capabilities = capabilities,
-      on_attach    = on_attach,
+    vim.lsp.config(server_name, {
+      settings = {
+        [server_name] = {
+          capabilities = capabilities,
+          on_attach    = on_attach,
+        },
+      },
     })
   end,
-  ["svelte"] = function()
+  --[[ ["svelte"] = function()
     lspconfig["svelte"].setup({
       capabilities = capabilities,
       on_attach = function(client, bufnr)
@@ -97,12 +101,18 @@ mason_lspconfig.setup_handlers({
       end,
     })
   end,
+------
   ["graphql"] = function()
-    lspconfig["graphql"].setup({
-      capabilities = capabilities,
-      filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+    vim.lsp.config("graphql", {
+      settings = {
+        ["graphql"] = {
+          capabilities = capabilities,
+          filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+        },
+      },
     })
   end,
+------
   ["emmet_ls"] = function()
     lspconfig["emmet_ls"].setup({
       capabilities = capabilities,
@@ -164,7 +174,7 @@ mason_lspconfig.setup_handlers({
         }
       }
     })
-  end,
+  end, ]]
 })
 
 end,
