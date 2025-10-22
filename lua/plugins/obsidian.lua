@@ -45,19 +45,27 @@ return{
     nvim_cmp = true, -- Set to false to disable completion.
     min_chars = 1,      -- Trigger completion at <number> chars.
   },
-  new_notes_location = "/home/holze/OneDrive/notebook/0-inbox",
+  new_notes_location = "/home/holze/personal/github/notebook/0-inbox",
   -- new_notes_location = "/Volumes/Users/manny/Library/Mobile Documents/iCloud~md~obsidian/Documents/notebook/0-inbox",
   open_app_foreground = false, -- true for executing Obsidian app in the foreground.
   picker = {
-    name = "telescope.nvim", -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
+    -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
+    name = "telescope.nvim",
     -- Optional, configure key mappings for the picker. These are the defaults.
     -- Not all pickers support all mappings.
-    -- mappings = {
+    note_mappings = {
       -- Create a new note from your query.
-      -- new = "<C-x>",
+      --new = "<C-x>",
       -- Insert a link to the selected note.
-      -- insert_link = "<C-l>",
+      --insert_link = "<C-l>",
     },
-})
+    tag_mappings = {
+      -- Add tag(s) to current note.
+      --tag_note = "<C-x>",
+      -- Insert a tag at the current location.
+      --insert_tag = "<C-l>",
+    },
+}
+    })
 end,
 }

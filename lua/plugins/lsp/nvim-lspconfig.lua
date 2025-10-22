@@ -4,85 +4,115 @@
 -- Plugin to use LSP servers.
 -------------------------------------------------------------------------------
 return {
-  {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "maso-org/mason.nvim",
-      "mason-org/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
-      "folke/neodev.nvim",
-      "antosha417/nvim-lsp-file-operations",
+      { "antosha417/nvim-lsp-file-operations", config = true },
+      { "folke/neodev.nvim", opts = {} },
+      "artemave/workspace-diagnostics.nvim",
     },
     config = function()
+      local lspconfig = require("lspconfig")
+      local cmp_nvim_lsp = require("cmp_nvim_lsp")
+      local keymap = vim.keymap
+
       ------------------------------------------------------------
       -- 🧩 Diagnostic signs
-      ------------------------------------------------------------
-      local signs = {
-        Error = " ",
-        Warn  = " ",
-        Hint  = " ",
-        Info  = " ",
-      }
-
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-      end
-
       vim.diagnostic.config({
-        virtual_text = { prefix = "●" },
-        signs = true,
+        virtual_text = true,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = " ",
+            [vim.diagnostic.severity.HINT] = " ",
+            [vim.diagnostic.severity.INFO] = " ",
+          },
+        },
         underline = true,
         update_in_insert = false,
         severity_sort = true,
-        float = { border = "rounded" },
       })
 
       ------------------------------------------------------------
-      -- 🧠 Global LSP defaults
+      -- LSP Attach
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(ev)
+          local opts = { buffer = ev.buf, silent = true }
+
+          -- Navigation
+          opts.desc = "Show LSP references"
+          keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
+          opts.desc = "Go to declaration"
+          keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+          opts.desc = "Show LSP definitions"
+          keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+          opts.desc = "Show LSP implementations"
+          keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
+          opts.desc = "Show LSP type definitions"
+          keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
+
+          -- Actions
+          opts.desc = "See available code actions"
+          keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+          opts.desc = "Smart rename"
+          keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+
+          -- Diagnostics
+          opts.desc = "Show buffer diagnostics"
+          keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
+          opts.desc = "Show line diagnostics"
+          keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
+
+          -- Fixed deprecated warnings
+          opts.desc = "Go to previous diagnostic"
+          keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, opts)
+          opts.desc = "Go to next diagnostic"
+          keymap.set("n", "]d", function() vim.diagnostic.goto_next() end, opts)
+
+          -- Help
+          opts.desc = "Show documentation for what is under cursor"
+          keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          opts.desc = "Restart LSP"
+          keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
+        end,
+      })
+
+      -- Capabilities
+      local capabilities = cmp_nvim_lsp.default_capabilities()
+
+
       ------------------------------------------------------------
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      local ok, cmp = pcall(require, "cmp_nvim_lsp")
-      if ok then
-        capabilities = cmp.default_capabilities(capabilities)
+      --    Configure individual servers
+      local function default_on_attach(client, bufnr)
+        require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
       end
 
-      local on_attach = function(_, bufnr)
-        local opts = { buffer = bufnr, noremap = true, silent = true }
-        local keymap = vim.keymap.set
-        keymap("n", "gd", vim.lsp.buf.definition, opts)
-        keymap("n", "gr", vim.lsp.buf.references, opts)
-        keymap("n", "gi", vim.lsp.buf.implementation, opts)
-        keymap("n", "K", vim.lsp.buf.hover, opts)
-        keymap("n", "<leader>rn", vim.lsp.buf.rename, opts)
-        keymap("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-        keymap("n", "<leader>f", function()
-          vim.lsp.buf.format({ async = true })
-        end, opts)
-      end
-
-      ------------------------------------------------------------
-      -- 🏗️ Default config for all servers
-      ------------------------------------------------------------
-      vim.lsp.config("*", {
-        on_attach = on_attach,
+      -- Tailwind CSS
+      lspconfig["tailwindcss"].setup({
         capabilities = capabilities,
+        on_attach = default_on_attach,
+        filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte" },
+        settings = {
+          tailwindCSS = {
+            experimental = {
+              classRegex = {
+                { "([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*)" }
+              },
+            },
+          },
+        },
       })
-
-      ------------------------------------------------------------
-      -- 🧩 Per-server configurations
-      ------------------------------------------------------------
 
       -- Svelte
-      vim.lsp.config("svelte", {
+      lspconfig["svelte"].setup({
         capabilities = capabilities,
         on_attach = function(client, bufnr)
-          on_attach(client, bufnr)
+          default_on_attach(client, bufnr)
           vim.api.nvim_create_autocmd("BufWritePost", {
             pattern = { "*.js", "*.ts" },
             callback = function(ctx)
-              -- Use ctx.match instead of ctx.file
               client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
             end,
           })
@@ -90,66 +120,36 @@ return {
       })
 
       -- GraphQL
-      vim.lsp.config("graphql", {
+      lspconfig["graphql"].setup({
         capabilities = capabilities,
+        on_attach = default_on_attach,
         filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
       })
 
       -- Emmet
-      vim.lsp.config("emmet_ls", {
+      lspconfig["emmet_ls"].setup({
         capabilities = capabilities,
-        filetypes = {
-          "html",
-          "typescriptreact",
-          "javascriptreact",
-          "css",
-          "sass",
-          "scss",
-          "less",
-          "svelte",
-        },
+        on_attach = default_on_attach,
+        filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
       })
 
       -- Lua
-      vim.lsp.config("lua_ls", {
+      lspconfig["lua_ls"].setup({
+      cmd = { os.getenv("HOME") .. "/.local/share/nvim/mason/packages/lua-language-server/lua-language-server" },
         capabilities = capabilities,
-        on_attach = on_attach,
+        on_attach = default_on_attach,
         settings = {
           Lua = {
-            runtime = {
-              version = "LuaJIT",
-            },
-            diagnostics = {
-              globals = { "vim" },
-            },
-            workspace = {
-              library = {
-                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                [vim.fn.stdpath("config") .. "/lua"] = true,
-              },
-            },
-            telemetry = { enable = false },
+            diagnostics = { globals = { "vim" } },
             completion = { callSnippet = "Replace" },
           },
         },
       })
 
-      -- TypeScript
-      vim.lsp.config("tsserver", {
+      -- PHP
+      lspconfig["intelephense"].setup({
         capabilities = capabilities,
-        filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
-        cmd = { "typescript-language-server", "--stdio" },
-      })
-
-      -- Intelephense
-      vim.lsp.config("intelephense", {
-        capabilities = capabilities,
-        on_attach = function(client, bufnr)
-          on_attach(client, bufnr)
-          -- Disable built-in formatting
-          client.server_capabilities.documentFormattingProvider = false
-          client.server_capabilities.documentRangeFormattingProvider = false
-        end,
+        on_attach = default_on_attach,
         filetypes = { "php", "blade" },
         settings = {
           intelephense = {
@@ -161,8 +161,50 @@ return {
           },
         },
       })
-      require("plugins.lspconfig").setup()
+
+      -- CSS
+      lspconfig["cssls"].setup({
+        capabilities = capabilities,
+        on_attach = default_on_attach,
+        filetypes = { "css", "scss", "less", "sass" },
+        settings = {
+          css = { validate = true, lint = { unknownAtRules = "ignore" } },
+          scss = { validate = true, lint = { unknownAtRules = "ignore" } },
+          less = { validate = true, lint = { unknownAtRules = "ignore" } },
+        },
+      })
+
+      -- Ansible
+      lspconfig["ansiblels"].setup({
+        capabilities = capabilities,
+        on_attach = default_on_attach,
+        filetypes = { "yaml", "yml", "ansible" },
+      })
+
+      -- YAML
+      lspconfig["yamlls"].setup({
+        capabilities = capabilities,
+        on_attach = default_on_attach,
+        filetypes = { "yaml", "yml" },
+      })
+
+      -- Bash
+      lspconfig["bashls"].setup({
+        capabilities = capabilities,
+        on_attach = default_on_attach,
+        filetypes = { "sh", "bash", "zsh", "fish", "dash", "ksh" },
+      })
+
+      -- ESLint
+      lspconfig.eslint.setup({
+        settings = { packageManager = "yarn" },
+        on_attach = function(client, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "EslintFixAll",
+          })
+        end,
+      })
     end,
-  },
 }
 
