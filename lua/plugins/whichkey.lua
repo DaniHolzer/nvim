@@ -4,13 +4,13 @@
 -- Display possible keybindings after pressing the leader key.
 -------------------------------------------------------------------------------
 
-return { 
+return {
 	"folke/which-key.nvim",
 	event = "VeryLazy",
 	init = function()
 	  vim.o.timeout    = true  -- Turn on after timeout length is elapsed.
 	  vim.o.timeoutlen = 500   -- Milliseconds till Which-Key waits to activate.
-	end, 
+	end,
 	opts = {
 	  -- your configurion comes here
 	  -- or leave it empty to use the default settings

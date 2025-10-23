@@ -12,10 +12,10 @@ return {
 		"JoosepAlviste/nvim-ts-context-commentstring",
 	},
 	config = function()
-	  -- imort nvim-treesitter plugin
+	  -- import nvim-treesitter plugin
 	  local treesitter = require("nvim-treesitter.configs")
-  
-	  -- configure treesitter 
+
+	  -- configure treesitter
 	  treesitter.setup{
 
 	      modules          = { },
@@ -89,8 +89,8 @@ return {
   --     enable_close = false
   --   }
   -- }
-  	
-	  }  
+
+	  }
 	-- import context_commentsting  plugin
 	local context_commentstring = require("ts_context_commentstring")
 	  context_commentstring.setup{
