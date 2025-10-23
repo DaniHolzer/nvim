@@ -1,74 +1,105 @@
+
 -- ~/.dotfiles/nvim/lua/user/plugin_options/gitsigns.lua
-
 -- https://github.com/lewis6991/gitsigns.nvim
-
-
+--
+-- gitsigns is using an old validation method that conflicts with Neovim 0.11's new vim.validate
+-- Wrapper temporarily overrides vim.validate before loading gitsigns, then restores it afterward
 ------------------------------------------------------------------------------
 -- Gitsigns Plugin
 ------------------------------------------------------------------------------
-return{
-    "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+return {
+  "lewis6991/gitsigns.nvim",
+  event = { "BufReadPre", "BufNewFile" },
+  config = function()
+    -- Temporarily override vim.validate to handle gitsigns' validation with nvim 0.11
+    local old_validate = vim.validate
+    vim.validate = function(spec, ...)
+      -- If called with the new API format (string, value, type, optional)
+      if type(spec) == "string" then
+        local name, value, expected, optional = spec, ...
+        if value == nil and optional then
+          return
+        end
 
-    config = function()
+        local value_type = type(value)
+        local valid = false
+
+        if type(expected) == "function" then
+          valid = expected(value)
+        elseif type(expected) == "string" then
+          valid = value_type == expected
+        elseif type(expected) == "table" then
+          for _, t in ipairs(expected) do
+            if value_type == t then
+              valid = true
+              break
+            end
+          end
+        end
+
+        if not valid then
+          error(string.format("validation failed for '%s'", name), 2)
+        end
+        return
+      end
+
+      -- Otherwise use the old API
+      return old_validate(spec, ...)
+    end
+
     local gitsigns = require("gitsigns")
 
+    ---------------------------------------------------------------------------
+    --- Settings
     gitsigns.setup({
-  signs = {
-    add =          { text = '▎' },
-    change =       { text = '▎' },
-    delete =       { text = ' ' },
-    topdelete =    { text = ' ' },
-    changedelete = { text = '▎' },
-  },
-  -- Create Gitsigns column before line numbers:
-  signcolumn = true,
-  -- Disable highlighting of line numbers affected by Gitsigns:
-  numhl = false,
-  -- Disable highlighting of current line if it contains Gitsigns:
-  linehl = false,
-  -- Disable highlighting of word level changes:
-  word_diff = false,
-  -- Watch the Git directory for changes:
-  watch_gitdir = {
-    interval = 1000,
-    follow_files = true,
-  },
-  -- Enable Gitsigns for untracked files too:
-  attach_to_untracked = true,
-  -- Disable Git-Blame information for current line:
-  current_line_blame = false,
-  current_line_blame_opts = {
-    -- Enable displaying virtual text for blame information:
-    virt_text = true,
-    -- Position of blame information (possible: eol, overlay, right_align):
-    virt_text_pos = 'eol',
-    -- Milliseconds before displaying blame information:
-    delay = 500,
-    -- Don't ignore change of white spaces for blame:
-    ignore_whitespace = false,
-  },
-
-  -- Formatting of blame information:
-  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
-
-  -- Priority of Gitsigns against other signs:
-  sign_priority = 6,
-  -- Refresh interval of Gitsigns in milliseconds:
-  update_debounce = 100,
-  -- Use the default built-in status formatter:
-  status_formatter = nil,
-  -- Maximum file size where Gitsigns will be displayed in bytes:
-  max_file_length = 40000,
-  -- Appearance of the preview window (options passed to nvim_open_win:
-  preview_config = {
-    border   = 'single',
-    style    = 'minimal',
-    relative = 'cursor',
-    row      = 0,
-    col      = 1,
-  },
-
+      signs = {
+        add          = { text = '▎' },
+        change       = { text = '▎' },
+        delete       = { text = ' ' },
+        topdelete    = { text = ' ' },
+        changedelete = { text = '▎' },
+        untracked    = { text = '┆' },
+      },
+      signs_staged = {
+        add          = { text = '▎' },
+        change       = { text = '▎' },
+        delete       = { text = ' ' },
+        topdelete    = { text = ' ' },
+        changedelete = { text = '▎' },
+      },
+      signcolumn           = true,
+      numhl                = false,
+      linehl               = false,
+      word_diff            = false,
+      watch_gitdir         = {
+        interval     = 1000,
+        follow_files = true,
+      },
+      auto_attach             = true,
+      attach_to_untracked     = true,
+      current_line_blame      = true,
+      current_line_blame_opts = {
+        virt_text         = true,
+        virt_text_pos     = 'eol',
+        delay             = 10,
+        ignore_whitespace = false,
+        use_focus         = true,
+      },
+      current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+      sign_priority    = 6,
+      update_debounce  = 100,
+      status_formatter = nil,
+      max_file_length  = 40000,
+      preview_config   = {
+        border   = 'single',
+        style    = 'minimal',
+        relative = 'cursor',
+        row      = 0,
+        col      = 1,
+      },
     })
-    end,
+
+    -- Restore original vim.validate after gitsigns is loaded
+    vim.validate = old_validate
+  end,
 }
