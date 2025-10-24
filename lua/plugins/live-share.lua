@@ -2,6 +2,8 @@
 -- Live-Share Plugin
 -- https://github.com/azratul/live-share.nvim
 -- Collaborate with others in real-time.
+-- :LiveShareServer [port]: Start a Live Share server. Example: :LiveShareServer 9876
+-- :LiveShareJoin [url] [port]: Join a Live Share session. Example: :LiveShareJoin abc.serveo.net 80
 -------------------------------------------------------------------------------
 
 return {
