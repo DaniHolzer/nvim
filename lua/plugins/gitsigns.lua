@@ -11,6 +11,9 @@ return {
   "lewis6991/gitsigns.nvim",
   event = { "BufReadPre", "BufNewFile" },
   config = function()
+
+    ---------------------------------------------------------------------------
+    -- Workaround because of a error where nvim wants a function but gets table
     -- Temporarily override vim.validate to handle gitsigns' validation with nvim 0.11
     local old_validate = vim.validate
     vim.validate = function(spec, ...)
@@ -46,6 +49,8 @@ return {
       -- Otherwise use the old API
       return old_validate(spec, ...)
     end
+    ---------------------------------------------------------------------------
+
 
     local gitsigns = require("gitsigns")
 

@@ -1,4 +1,8 @@
-
+-------------------------------------------------------------------------------
+-- Undotree Plugin
+-- https://github.com/mbbill/undotree
+-- Visualizes the undo history
+-------------------------------------------------------------------------------
 return{
     "mbbill/undotree",
     config = function()

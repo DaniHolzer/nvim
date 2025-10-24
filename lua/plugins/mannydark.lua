@@ -7,13 +7,13 @@
 return {
    'MannyFay/mannydark.nvim',
     config = function()
-    vim.cmd([[
+      vim.cmd([[
         try
-      colorscheme mannydark
-    catch /^Vim\%((\a\+)\)\=:E185/
-      colorscheme default
-      set background=dark
-    endtry
-]])
+          colorscheme mannydark
+        catch /^Vim\%((\a\+)\)\=:E185/
+          colorscheme default
+          set background=dark
+        endtry
+      ]])
     end,
 }

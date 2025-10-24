@@ -1,9 +1,7 @@
--- https://github.com/nvim-telescope/telescope.nvim
-
-
-
 ------------------------------------------------------------------------------
 -- Telescope Plugin
+-- https://github.com/nvim-telescope/telescope.nvim
+-- Is a highly extendable fuzzy finder over lists with preview
 ------------------------------------------------------------------------------
 
 return {

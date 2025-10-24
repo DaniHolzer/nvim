@@ -22,7 +22,7 @@ return {
         cleaning_interval = 1250,                             -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
       },
 
-      -- Function that determines whether to save the current buffer or not (true: if buffer is ok to be saved. false: if it's not ok to be saved.
+      -- Function that determines whether to save the current buffer or not (true: if buffer is ok to be saved. false: if it's not ok to be saved).
       condition = function(buf)
         local fn    = vim.fn
         local utils = require("auto-save.utils.data")
@@ -44,6 +44,6 @@ return {
         before_saving         = nil,  -- Ran before doing the actual save.
         after_saving          = nil,  -- Ran after doing the actual save.
       },
-  })
+    })
   end,
 }

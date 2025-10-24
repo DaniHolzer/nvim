@@ -1,11 +1,7 @@
--- ~/.dotfiles/nvim/lua/user/plugin_options/plantuml-previewer.lua
-
--- https://github.com/weirongxu/plantuml-previewer.vim
-
-
-
 ------------------------------------------------------------------------------
 -- PlantUML Previewer Plugin
+-- https://github.com/weirongxu/plantuml-previewer.vim
+-- Provides live preview and export support for PlantUML diagrams.
 ------------------------------------------------------------------------------
 return{
     "weirongxu/plantuml-previewer.vim",
