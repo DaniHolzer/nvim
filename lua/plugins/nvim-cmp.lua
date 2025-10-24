@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 -- Nvim CMP (Completion Management Plugin) Plugin
 -- https://github.com/hrsh7th/nvim-cmp
+-- A completion engine plugin for neovim written in Lua
 -------------------------------------------------------------------------------
 return {
   "hrsh7th/nvim-cmp",
