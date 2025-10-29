@@ -48,8 +48,7 @@ return {
       -- pre_hook = nil,      -- Function to call before (un)comment.
       -- for commenting tsx, jsx, svelte, html files (make commentstring work with comment plugin)
       pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
-      post_hook = function()
-      end,
+      post_hook = nil,
     })
 	end,
 }

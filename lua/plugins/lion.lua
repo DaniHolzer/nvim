@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 -- Vim Lion Plugin
 -- https://github.com/tommcdo/vim-lion
-
+-- Tool for aligning text by some character
 ------------------------------------------------------------------------------
 return{
     "tommcdo/vim-lion",

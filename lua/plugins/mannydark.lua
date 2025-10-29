@@ -1,9 +1,8 @@
 ------------------------------------------------------------------------------
 -- mannydark plugin
-
 -- https://github.com/MannyFay/mannydark.nvim
+-- A very dark color scheme
 ------------------------------------------------------------------------------
-
 return {
    'MannyFay/mannydark.nvim',
     config = function()

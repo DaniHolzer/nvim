@@ -2,7 +2,6 @@
 -- Auto-Save Plugin
 -- https://github.com/Pocco81/auto-save.nvim
 -------------------------------------------------------------------------------
-
 return {
   "pocco81/auto-save.nvim",
   event = {

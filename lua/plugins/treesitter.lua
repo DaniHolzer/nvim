@@ -3,7 +3,6 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
 -- Automates the installation and management of language parsers.
 -------------------------------------------------------------------------------
-
 return {
 	  "nvim-treesitter/nvim-treesitter",
 	  event = { "BufReadPre", "BufNewFile" },
@@ -94,7 +93,7 @@ return {
 	    local context_commentstring = require("ts_context_commentstring")
 	      context_commentstring.setup{
 	    	-- your configuration for context_commentstring comes here
-	      }
+	    }
 	    vim.g.skip_ts_context_commentstring_module = true
-	end,
+	  end,
 }

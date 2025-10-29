@@ -3,7 +3,6 @@
 -- https://github.com/neovim/nvim-lspconfig
 -- Plugin to use LSP servers.
 -------------------------------------------------------------------------------
-
 return {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" }, -- Lazy-load on buffer read/new file events

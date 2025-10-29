@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 -- Nvim Colorizer Plugin
 -- https://github.com/norcalli/nvim-colorizer.lua
+-- Color highlighter
 -------------------------------------------------------------------------------
 return {
   "norcalli/nvim-colorizer.lua",
