@@ -24,7 +24,7 @@ return{
 
       indent_blankline.setup ({
         indent = {
-          char = { text = '▏' },
+          char =  '▏',
           highlight = highlight,
         },
         scope = {

@@ -1,24 +1,16 @@
 #!/usr/bin/env sh
 
-# ~/.config/dotfiles/nvim/create-nvim-symlinks.sh
-
-
-DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-
 #-----------------------------------------------------------------------------
 #  Neovim Configs
 #-----------------------------------------------------------------------------
 
+# Delete ~/.config/nvim directory if it exists
 # Delete ~/.config/nvim/:
 rm -rf $HOME/.config/nvim
 
-# Create ~/.config/nvim:
-#mkdir $HOME/.config/nvim
-
-# Create symlink to ~/.config/dotfiles/nvim/lua/:
-#ln -s $DOTFILES/nvim/lua $HOME/.config/nvim/
+# Create a symlink named nvim from ~/.config to ~/personal/github/nvim
+# If nvim starts it searches for configurations in ~/.config
+# By creating this symlink, nvim runs with the configuration from ~/personal/github/nvim
+# Create symlink to ~/personal/nvim/:
 ln -s $HOME/personal/github/nvim $HOME/.config/nvim
 
-# Create symlink to ~/.config/dotfiles/nvim/init.lua:
-#ln -s $DOTFILES/nvim/init.lua $HOME/.config/nvim/init.lua
