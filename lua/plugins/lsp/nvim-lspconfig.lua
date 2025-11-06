@@ -95,6 +95,15 @@ return {
     -- LANGUAGE SERVER CONFIGURATIONS
     ----------------------------------------------------------------------------
 
+
+
+    vim.lsp.config("ts_ls", {
+      capabilities = capabilities,
+      on_attach = default_on_attach,
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+    })
+    vim.lsp.enable("ts_ls")
+
     -- Tailwind CSS server with experimental class regex config
     vim.lsp.config("tailwindcss", {
       capabilities = capabilities,
