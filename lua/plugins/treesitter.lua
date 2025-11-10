@@ -18,24 +18,24 @@ return {
 	    -- configure treesitter
 	    treesitter.setup{
 	      modules          = { },
-        ensure_installed = { 'all' },  -- List of syntax highlight parsers to install.
+        ensure_installed = { "html", "javascript", "css", "lua" },  -- List of parsers that are always installed
         sync_install     = false,      -- Install packages asynchronously (applies only to 'ensure_installed').
-        auto_install     = false,      -- Automatically install missing parsers in a buffer.
-        ignore_install   = { 'all' },  -- List of syntax highlight parser to ignore.
+        auto_install     = true,      -- Automatically install missing parsers in a buffer when needed.
+        --ignore_install   = { 'all' },  -- List of syntax highlight parser to ignore.
         autopairs = {                  -- Create always a pair of brackets.
           enable = true,
         },
         highlight = {
           -- Enable syntax highlighting:
-          enable = false,
+          enable = true,
           -- Languages where color highlighting is disabled:
-          disable = { 'all' },
+          -- disable = { 'all' },
           -- If true, it slows down Neovim and doubles syntax highlighting:
           additional_vim_regex_highlighting = false,
         },
         indent = {
           enable  = true,
-          disable = { '' }
+          --disable = { '' }
         },
         -- context_commentstring = {
           -- enable         = true,
@@ -53,7 +53,7 @@ return {
           -- Enable extension:
           enable = true,
           -- List of disabled languages:
-          disable = { '' },
+          --disable = { '' },
         },
         playground = {
           enable  = true,
@@ -76,6 +76,7 @@ return {
           },
         },
         autotag = {       -- Autotag appearance
+          enable                = true,
           enable_close          = true,  -- Auto close tags
           enable_rename         = true,  -- Auto rename pairs of tags
           enable_close_on_slash = false  -- Auto close on trailing </

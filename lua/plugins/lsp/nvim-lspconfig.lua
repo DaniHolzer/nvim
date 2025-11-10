@@ -95,14 +95,34 @@ return {
     -- LANGUAGE SERVER CONFIGURATIONS
     ----------------------------------------------------------------------------
 
+    -- HTML Language Server
+    vim.lsp.config("html", {
+      capabilities = capabilities,
+      on_attach = default_on_attach,
+      -- filetypes = { "html", "templ" }, -- Not strictly needed, default is fine
+    })
+    vim.lsp.enable("html")
 
-
+    -- JavaScript Language Server (typescript-language-server for both JS & TS!)
     vim.lsp.config("ts_ls", {
       capabilities = capabilities,
       on_attach = default_on_attach,
       filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
     })
     vim.lsp.enable("ts_ls")
+
+    -- CSS, SCSS, Less with linting config
+    vim.lsp.config("cssls", {
+      capabilities = capabilities,
+      on_attach = default_on_attach,
+      filetypes = { "css", "scss", "less", "sass" },
+      settings = {
+        css = { validate = true, lint = { unknownAtRules = "ignore" } },
+        scss = { validate = true, lint = { unknownAtRules = "ignore" } },
+        less = { validate = true, lint = { unknownAtRules = "ignore" } },
+      },
+    })
+    vim.lsp.enable("cssls")
 
     -- Tailwind CSS server with experimental class regex config
     vim.lsp.config("tailwindcss", {
@@ -182,18 +202,7 @@ return {
     })
     vim.lsp.enable("intelephense")
 
-    -- CSS, SCSS, Less with linting config
-    vim.lsp.config("cssls", {
-      capabilities = capabilities,
-      on_attach = default_on_attach,
-      filetypes = { "css", "scss", "less", "sass" },
-      settings = {
-        css = { validate = true, lint = { unknownAtRules = "ignore" } },
-        scss = { validate = true, lint = { unknownAtRules = "ignore" } },
-        less = { validate = true, lint = { unknownAtRules = "ignore" } },
-      },
-    })
-    vim.lsp.enable("cssls")
+
 
     -- Ansible support
     vim.lsp.config("ansiblels", {
