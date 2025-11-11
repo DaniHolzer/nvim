@@ -1,13 +1,13 @@
 # Neovim Configuration
 
-# Project Status: Rebuilding
-This project is currently in the rebuilding phase. Be careful if you want to use it.
+<!-- # Project Status: Rebuilding -->
+<!-- This project is currently in the rebuilding phase. Be careful if you want to use it. -->
 
----
-<br>
+<!-- --- -->
+<!-- <br> -->
 
-# Old Part of README
-My system: macOS
+<!-- # Old Part of README -->
+My system: Linux Ubuntu
 This is a beginner friendly entry point to Neovim.
 All files are well documentated, so you can dive easily in and understand what is happening.
 
