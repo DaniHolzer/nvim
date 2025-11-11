@@ -45,3 +45,10 @@ vim.cmd('set pumblend=0')                                    -- Transparency of 
 vim.loader.enable()                                          -- Improve Neovim startup time.
 vim.opt.mouse = 'a'                                          -- Enable mouse support.
 -- nvim_list_uis()[0]
+
+
+------------------------------------------------------------------------------
+-- Ensures $PATH inside Neovim includes Mason's bin directory
+------------------------------------------------------------------------------
+vim.env.PATH = vim.env.PATH .. ':' .. vim.loop.os_homedir() .. '/.local/share/nvim/mason/bin'
+
