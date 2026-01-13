@@ -4,15 +4,13 @@
 -- A very dark color scheme
 ------------------------------------------------------------------------------
 return {
-   'MannyFay/mannydark.nvim',
-    config = function()
-      vim.cmd([[
-        try
-          colorscheme mannydark
-        catch /^Vim\%((\a\+)\)\=:E185/
-          colorscheme default
-          set background=dark
-        endtry
-      ]])
-    end,
-}
+  'MannyFay/mannydark.nvim',
+  lazy = false,
+  priority = 1000,
+  config = function()
+    local colorscheme = require('mannydark')
+
+    colorscheme.setup({ })
+
+    vim.cmd.colorscheme('mannydark')
+  end,}
