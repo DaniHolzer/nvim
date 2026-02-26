@@ -108,15 +108,17 @@ return {
         "codespell",            -- Check code for common misspellings.
         "commitlint",           -- Checks commit messages format.
         'editorconfig-checker', -- EditorConfig checker.
-        "eslint-lsp",           -- JavaScript, TypeScript linter.
+        -- "eslint-lsp",           -- JavaScript, TypeScript linter.
         "phpstan",              -- PHP linter.
         "pylint",               -- Python linter.
+        "shellcheck",           -- Shell script linter.
         "yamllint",             -- YAML linter.
 
         ----- Formatters:
+        "biome",                -- Fast JS/TS/JSON fomrmatter.
         "black",                -- Python formatter.
         "blade-formatter",      -- Laravel Blade formatter.
-        "prettierd",            -- Prettier formatter.
+        --"prettierd",            -- Prettier formatter.
         --"stylua",             -- Lua formatter.
         "isort",                -- Python formatter.
         "pint",                 -- PHP formatter.
