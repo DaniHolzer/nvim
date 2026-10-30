@@ -50,5 +50,5 @@ vim.opt.mouse = 'a'                                          -- Enable mouse sup
 ------------------------------------------------------------------------------
 -- Ensures $PATH inside Neovim includes Mason's bin directory
 ------------------------------------------------------------------------------
-vim.env.PATH = vim.env.PATH .. ':' .. vim.loop.os_homedir() .. '/.local/share/nvim/mason/bin'
+vim.env.PATH = vim.env.PATH .. ':' .. vim.uv.os_homedir() .. '/.local/share/nvim/mason/bin'
 

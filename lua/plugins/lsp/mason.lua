@@ -1,12 +1,12 @@
 -------------------------------------------------------------------------------
 -- Mason Plugin
--- https://github.com/williamboman/mason-org/mason.nvim
+-- https://github.com/mason-org/mason.nvim
 -- Package manager for LSP servers.
 -------------------------------------------------------------------------------
 return {
-  "williamboman/mason.nvim",
+  "mason-org/mason.nvim",
   dependencies = {
-    "williamboman/mason-lspconfig.nvim",     -- Integrates Mason with nvim-lspconfig
+    "mason-org/mason-lspconfig.nvim",     -- Integrates Mason with nvim-lspconfig
     "WhoIsSethDaniel/mason-tool-installer.nvim", -- Manages linters and formatters
     "neovim/nvim-lspconfig"                   -- Neovim native LSP client configurations
   },
@@ -37,7 +37,7 @@ return {
     -- Configure Mason LSP integration
     mason_lspconfig.setup({
       -- Automatically install configured servers when needed
-      automatic_installation = true,
+      automatic_enable = false, -- Servers are enabled in nvim-lspconfig.lua
       -- List of common LSP servers recommended to install
       ensure_installed = {
         'angularls',                       -- Angular language server.

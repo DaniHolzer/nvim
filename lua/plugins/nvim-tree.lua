@@ -234,12 +234,6 @@ return {
           ignore_list = {},     -- List of buffer names / filetypes that will not update the tree.
         },
 
-        -- Open a file or directory in your preferred application:
-        system_open = {
-          cmd  = '',  -- Empty string for OS default application.
-          args = {},  -- List of arguments to pass to the command. Empty list for OS default application.
-        },
-
         -- Git integration:
         git = {
           enable            = true,   -- true: Enable Git integration.

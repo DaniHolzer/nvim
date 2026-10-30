@@ -2,93 +2,52 @@
 -- Treesitter Plugin
 -- https://github.com/nvim-treesitter/nvim-treesitter
 -- Automates the installation and management of language parsers.
+-- Uses the "main" branch (the old "master" branch does not support Nvim 0.12).
+-- Requires the tree-sitter CLI: cargo install --locked tree-sitter-cli
 -------------------------------------------------------------------------------
 return {
-	  "nvim-treesitter/nvim-treesitter",
-	  event = { "BufReadPre", "BufNewFile" },
-	  build = ":TSUpdate",
-	  dependencies = {
-	  	"windwp/nvim-ts-autotag",
-	  	"JoosepAlviste/nvim-ts-context-commentstring",
-	  },
-	  config = function()
-	    -- import nvim-treesitter plugin
-	    local treesitter = require("nvim-treesitter.configs")
+  "nvim-treesitter/nvim-treesitter",
+  branch = "main",
+  lazy = false, -- Does not support lazy-loading
+  build = ":TSUpdate",
+  dependencies = {
+    "windwp/nvim-ts-autotag",
+    "JoosepAlviste/nvim-ts-context-commentstring",
+  },
+  config = function()
+    local treesitter = require("nvim-treesitter")
 
-	    -- configure treesitter
-	    treesitter.setup{
-	      modules          = { },
-        ensure_installed = { "html", "javascript", "css", "lua" },  -- List of parsers that are always installed
-        sync_install     = false,      -- Install packages asynchronously (applies only to 'ensure_installed').
-        auto_install     = true,      -- Automatically install missing parsers in a buffer when needed.
-        --ignore_install   = { 'all' },  -- List of syntax highlight parser to ignore.
-        autopairs = {                  -- Create always a pair of brackets.
-          enable = true,
-        },
-        highlight = {
-          -- Enable syntax highlighting:
-          enable = true,
-          -- Languages where color highlighting is disabled:
-          -- disable = { 'all' },
-          -- If true, it slows down Neovim and doubles syntax highlighting:
-          additional_vim_regex_highlighting = false,
-        },
-        indent = {
-          enable  = true,
-          --disable = { '' }
-        },
-        -- context_commentstring = {
-          -- enable         = true,
-          -- enable_autocmd = false,
-        -- },
-        textobjects = {
-          select = {
-            enable    = true,
-            lookahead = true,
-            keymaps   = {},
-          },
-        },
-        -- Highlighting of matching pairs (parentheses, brackets, tags, etc.):
-        matchup = {
-          -- Enable extension:
-          enable = true,
-          -- List of disabled languages:
-          --disable = { '' },
-        },
-        playground = {
-          enable  = true,
-          disable = {},
-          -- Time in milliseconds to highlight nodes in playground:
-          updatetime = 25,
-          -- Don't persist queries across Neovim sessions:
-          persist_queries = false,
-          keybindings = {
-            toggle_query_editor       = '<Nop>',
-            toggle_hl_groups          = '<Nop>',
-            toggle_injected_languages = '<Nop>',
-            toggle_anonymous_nodes    = '<Nop>',
-            toggle_language_display   = '<Nop>',
-            focus_language            = '<Nop>',
-            unfocus_language          = '<Nop>',
-            update                    = '<Nop>',
-            goto_node                 = '<Nop>',
-            show_help                 = '<Nop>',
-          },
-        },
-        -- Also override individual filetype configs, these take priority.
-        -- Empty by default, useful if one of the "opts" global settings
-        -- doesn't work well in a specific filetype
-        -- per_filetype = {
-        --   ["html"] = {
-        --     enable_close = false
-        --   }
-        -- }
-	    }
-	    -- import context_commentsting  plugin
-	    local context_commentstring = require("ts_context_commentstring")
-	      context_commentstring.setup{
-	    	-- your configuration for context_commentstring comes here
-	    }
-	    vim.g.skip_ts_context_commentstring_module = true
-	  end,
+    -- Parsers that are always installed:
+    treesitter.install({
+      "bash", "css", "dockerfile", "html", "javascript", "json", "lua",
+      "markdown", "markdown_inline", "php", "scss", "tsx", "typescript",
+      "vim", "vimdoc", "yaml",
+    })
+
+    -- Enable highlighting and indentation for a buffer:
+    local function start(buf)
+      if pcall(vim.treesitter.start, buf) then
+        vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end
+    end
+
+    -- Start treesitter on every filetype, install missing parsers on the fly:
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("UserTreesitter", {}),
+      callback = function(args)
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if not lang then return end
+        if vim.list_contains(treesitter.get_installed(), lang) then
+          start(args.buf)
+        elseif vim.list_contains(treesitter.get_available(), lang) then
+          treesitter.install(lang):await(function()
+            if vim.api.nvim_buf_is_valid(args.buf) then start(args.buf) end
+          end)
+        end
+      end,
+    })
+
+    require("ts_context_commentstring").setup({})
+    vim.g.skip_ts_context_commentstring_module = true
+  end,
 }

@@ -9,7 +9,7 @@ return {
   dependencies = {
     "hrsh7th/cmp-nvim-lsp",                -- LSP source for nvim-cmp completion
     { "antosha417/nvim-lsp-file-operations", config = true }, -- File operation LSP enhancement
-    { "folke/neodev.nvim", opts = {} },    -- Lua development for Neovim
+    { "folke/lazydev.nvim", ft = "lua", opts = {} }, -- Lua development for Neovim
     "artemave/workspace-diagnostics.nvim", -- Custom diagnostics workspace integration
   },
   config = function()
@@ -69,10 +69,10 @@ return {
         keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
         opts.desc = "Go to previous diagnostic"
-        keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, opts)
+        keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
 
         opts.desc = "Go to next diagnostic"
-        keymap.set("n", "]d", function() vim.diagnostic.goto_next() end, opts)
+        keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
 
         --- Misc ---
         opts.desc = "Show documentation for cursor word"
